@@ -30,8 +30,19 @@
 
       #refresh {
         position: absolute;
-        top: 1em;
+        bottom: 1em;
         right: 1em;
+        appearance: none;
+        background: none;
+        color: rgb(255, 255, 255, 0.4);
+        font-weight: 600;
+        border: none;
+        font-size: 17px;
+        cursor: pointer;
+      }
+
+      #refresh:hover {
+        color: rgb(255, 255, 255, 0.7);
       }
     </style>
   </head>
@@ -72,11 +83,10 @@
     }
 
     function updateQuestion() {
-      let randomIndex = Math.floor(Math.random() * questions.length);
-      xw;
+      let randomIndex = Math.floor(Math.random() * questionsWorkingCopy.length);
       while (questionsWorkingCopy[randomIndex] === undefined) {
         randomIndex++;
-        if (randomIndex >= questions.length) {
+        if (randomIndex >= questionsWorkingCopy.length) {
           randomIndex = 0;
         }
       }
