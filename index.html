@@ -26,24 +26,21 @@
         font-weight: 600;
         margin: 1em;
         max-width: 30em;
-        animation: fadeInAnimation 4s ease-out;
       }
 
-      @keyframes fadeInAnimation {
-        0% {
-          opacity: 0;
-        }
-        100% {
-          opacity: 1;
-        }
+      #refresh {
+        position: absolute;
+        top: 1em;
+        right: 1em;
       }
     </style>
   </head>
   <body>
     <h1 id="question"></h1>
+    <button id="refresh">Refresh</button>
   </body>
   <script>
-    const chrisQuestions = [
+    const QUESTIONS = [
       "What do you think your 10-years-from-now self would say about your current self?",
       "What takes up the most mental headspace on a daily basis? Why? Can you do anything “now” to lessen that?",
       "Share a beloved story about someone",
@@ -61,10 +58,43 @@
       "What is something about you that most people would be surprised by?",
       "If you instantly got 2 extra hours per day and all the energy you’d want during those two hours, what would you do? Why don’t you do more of that, in general?",
     ];
+    let questionsWorkingCopy = [...QUESTIONS];
     const questionEl = document.getElementById("question");
-    const questions = [...chrisQuestions];
-    const randomQuestion =
-      questions[Math.floor(Math.random() * questions.length)];
-    questionEl.innerText = randomQuestion;
+    const refreshButton = document.getElementById("refresh");
+    const storage = localStorage.getItem("questions-seen");
+    let questionsSeen = storage ? JSON.parse(storage) : [];
+
+    function blankQuestion(index) {
+      questionsWorkingCopy[index] = undefined;
+      if (questionsWorkingCopy.every((item) => item === undefined)) {
+        questionsWorkingCopy = [...QUESTIONS];
+      }
+    }
+
+    function updateQuestion() {
+      let randomIndex = Math.floor(Math.random() * questions.length);
+      xw;
+      while (questionsWorkingCopy[randomIndex] === undefined) {
+        randomIndex++;
+        if (randomIndex >= questions.length) {
+          randomIndex = 0;
+        }
+      }
+      const randomQuestion = questionsWorkingCopy[randomIndex];
+      questionEl.innerText = randomQuestion;
+      questionEl.animate([{ opacity: 0 }, { opacity: 1 }], 4000);
+
+      // Blank out the question so it doesn't get asked again
+      blankQuestion(randomIndex);
+
+      // Store questions seen in local storage so we remember on refresh
+      questionsSeen = [...questionsSeen, randomIndex];
+      localStorage.setItem("questions-seen", JSON.stringify(questionsSeen));
+    }
+
+    // Initialize
+    updateQuestion();
+    questionsSeen.forEach(blankQuestion);
+    refreshButton.addEventListener("click", updateQuestion);
   </script>
 </html>
