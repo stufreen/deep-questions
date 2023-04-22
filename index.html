@@ -79,6 +79,8 @@
       questionsWorkingCopy[index] = undefined;
       if (questionsWorkingCopy.every((item) => item === undefined)) {
         questionsWorkingCopy = [...QUESTIONS];
+        questionsSeen = [];
+        localStorage.setItem("questions-seen", JSON.stringify(questionsSeen));
       }
     }
 
